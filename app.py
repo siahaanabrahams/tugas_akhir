@@ -70,7 +70,7 @@ def video_process(uploaded_file, model) :
     total_frame =  int(clip.reader.nframes)
     frames = total_duration/total_frame
     print(frames)
-    for frame in clip.iter_frames(fps=0.67, dtype="uint8"):
+    for frame in clip.iter_frames(fps=24, dtype="uint8"):
         # Run YOLO on the frame
         results = model(frame)
         annotated_frame = results[0].plot()
