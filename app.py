@@ -96,14 +96,14 @@ def video_process(uploaded_file, model) :
 
             # Get video properties
             fps = cap.get(cv2.CAP_PROP_FPS)
-            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-            duration = total_frames / fps 
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) 
             custom_fps = 24
-            frame_delay = int(1000 / custom_fps)
+            frame_delay = int(1 / custom_fps)
             
             frame_placeholder = st.empty()
             
-            for frame_num in range(total_frames):
+            for i in range(total_frames):
+                start_time = time.time()
                 ret, frame = cap.read()
                 if not ret:
                     break  
@@ -112,7 +112,10 @@ def video_process(uploaded_file, model) :
                 annotated_frame = results[0].plot()
 
                 frame_placeholder.image(annotated_frame, channels="RGB", use_container_width=True)
-                cv2.waitKey(frame_delay)
+                elapsed_time = time.time() - start_time
+                time_to_wait = frame_time - elapsed_time
+                if time_to_wait > 0 :
+                    time.sleep(time_to_wait) 
             cap.release()   
         except Exception as e:
             st.error(f"Error processing video: {e}")
