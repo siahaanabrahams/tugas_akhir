@@ -98,7 +98,7 @@ def video_process(uploaded_file, model) :
             fps = cap.get(cv2.CAP_PROP_FPS)
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) 
             custom_fps = 24
-            frame_time = int(1 / custom_fps)
+            frame_time = (1 / custom_fps)
             
             frame_placeholder = st.empty()
             
