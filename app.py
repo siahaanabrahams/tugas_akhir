@@ -200,7 +200,7 @@ def video_process(uploaded_file, model) :
     return None
 
 # MODEL LOAD
-model = YOLO("weight.pt")
+model = YOLO("/kaggle/working/tugas_akhir/weight.pt")
 
 # SIDEBAR
 file_type = st.sidebar.selectbox("Select file type", ["Image", "Video"]) 
