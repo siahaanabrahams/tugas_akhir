@@ -52,74 +52,74 @@ def image_plot(result, df):
 # VIDEO PROCESS
 def video_process(uploaded_file, model) : 
     ## TESTING 1 USING MOVIEPY
-    # video_bytes = uploaded_file.read()  
-    # with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_file:
-    #     temp_file.write(video_bytes)
-    #     temp_file.flush()  # Ensure all data is written
-    #     temp_file_path = temp_file.name
-    # if not os.path.exists(temp_file_path):
-    #     st.error(f"Error: Temporary file not found at {temp_file_path}")
-    #     return  
-    # try:
-    #     clip = VideoFileClip(temp_file_path)
-    # except Exception as e:
-    #     st.error(f"Error loading video: {e}")
-    #     return
-    # frame_placeholder = st.empty()
-    # total_duration = int(clip.duration)
-    # total_frame =  int(clip.reader.nframes)
-    # frames = total_duration/total_frame
-    # print(frames)
-    # for frame in clip.iter_frames(fps=0.67, dtype="uint8"):
-    #     # Run YOLO on the frame
-    #     results = model(frame)
-    #     annotated_frame = results[0].plot()
-
-    #     # Display the frame in Streamlit
-    #     frame_placeholder.image(annotated_frame, channels="RGB", use_column_width=True) 
-
-
-    ## TESTING 2 USING CV
-    video_bytes = uploaded_file.read()
+    video_bytes = uploaded_file.read()  
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_file:
         temp_file.write(video_bytes)
-        temp_file.flush()   
+        temp_file.flush()  # Ensure all data is written
         temp_file_path = temp_file.name
     if not os.path.exists(temp_file_path):
         st.error(f"Error: Temporary file not found at {temp_file_path}")
-    else:
-        try:  
-            cap = cv2.VideoCapture(temp_file_path)
-            if not cap.isOpened():
-                st.error("Error opening video file.")
-                return
+        return  
+    try:
+        clip = VideoFileClip(temp_file_path)
+    except Exception as e:
+        st.error(f"Error loading video: {e}")
+        return
+    frame_placeholder = st.empty()
+    total_duration = int(clip.duration)
+    total_frame =  int(clip.reader.nframes)
+    frames = total_duration/total_frame
+    print(frames)
+    for frame in clip.iter_frames(fps=0.67, dtype="uint8"):
+        # Run YOLO on the frame
+        results = model(frame)
+        annotated_frame = results[0].plot()
 
-            # Get video properties
-            fps = cap.get(cv2.CAP_PROP_FPS)
-            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) 
-            custom_fps = 24
-            frame_time = (1 / custom_fps)
+        # Display the frame in Streamlit
+        frame_placeholder.image(annotated_frame, channels="RGB", use_column_width=True) 
+
+
+    ## TESTING 2 USING CV
+    # video_bytes = uploaded_file.read()
+    # with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_file:
+    #     temp_file.write(video_bytes)
+    #     temp_file.flush()   
+    #     temp_file_path = temp_file.name
+    # if not os.path.exists(temp_file_path):
+    #     st.error(f"Error: Temporary file not found at {temp_file_path}")
+    # else:
+    #     try:  
+    #         cap = cv2.VideoCapture(temp_file_path)
+    #         if not cap.isOpened():
+    #             st.error("Error opening video file.")
+    #             return
+
+    #         # Get video properties
+    #         fps = cap.get(cv2.CAP_PROP_FPS)
+    #         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) 
+    #         custom_fps = 24
+    #         frame_time = (1 / custom_fps)
             
-            frame_placeholder = st.empty()
+    #         frame_placeholder = st.empty()
             
-            for i in range(total_frames):
-                start_time = time.time()
-                ret, frame = cap.read()
-                if not ret:
-                    break  
+    #         for i in range(total_frames):
+    #             start_time = time.time()
+    #             ret, frame = cap.read()
+    #             if not ret:
+    #                 break  
                 
-                results = model(frame)
-                annotated_frame = results[0].plot()
+    #             results = model(frame)
+    #             annotated_frame = results[0].plot()
 
-                frame_placeholder.image(annotated_frame, channels="RGB", use_container_width=True)
-                elapsed_time = time.time() - start_time
-                time_to_wait = frame_time - elapsed_time
-                if time_to_wait > 0 :
-                    time.sleep(time_to_wait) 
-            cap.release()   
-        except Exception as e:
-            st.error(f"Error processing video: {e}")
-            return
+    #             frame_placeholder.image(annotated_frame, channels="RGB", use_container_width=True)
+    #             elapsed_time = time.time() - start_time
+    #             time_to_wait = frame_time - elapsed_time
+    #             if time_to_wait > 0 :
+    #                 time.sleep(time_to_wait) 
+    #         cap.release()   
+    #     except Exception as e:
+    #         st.error(f"Error processing video: {e}")
+    #         return
 
     ## TESTING 3 USING SAVED FILE
     # video_bytes = uploaded_file.read()  
